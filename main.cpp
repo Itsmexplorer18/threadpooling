@@ -57,8 +57,9 @@ void func(){
     cout<<"some tasks of user"<<endl;
 }
 int main(){
+         ThreadPool pool(8);
+
     while(1){
-        ThreadPool pool(8);
         pool.executetasks(func);
     }
     return 0;
