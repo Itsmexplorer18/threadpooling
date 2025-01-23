@@ -5,6 +5,7 @@
 #include <vector>
 #include <queue>
 #include <functional>
+#include <future> 
 using namespace std;
 
 class ThreadPool{
@@ -44,23 +45,73 @@ class ThreadPool{
             th.join();
         }
     }
-    void executetasks(function<void()> func){
+    template<class F, class... Args>
+auto executetasks(F&& f, Args&&... args) -> std::future<decltype(f(args...))> {
+    using return_type = decltype(f(args...));
+
+    // Create a shared_ptr for packaged_task
+    auto task = std::make_shared<std::packaged_task<return_type()>>(
+        std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+    );
+
+    // Get the future associated with the task
+    std::future<return_type> res = task->get_future();
+
+    // Add the task to the queue
+    {
+        std::unique_lock<std::mutex> lock(mtx);
+        tasks.emplace([task]() {
+            (*task)(); // Correctly dereference the shared_ptr and execute the task
+        });
+    }
+
+    // Notify one thread to pick up the task
+    cv.notify_one();
+
+    return res;
+}
+
+   /* template<class F,class... Args>
+    auto  executetasks(F&& f,Args&&... args)->future<decltype(f(args...))>{
+        using return_type=decltype(f(args...));
+        auto task=make_shared<packaged_task<return_type()>>(bind(forward<F>(f),forward<Args>(args...)));
+        future<return_type> res=task->get_future();
+        unique_lock<mutex> lock(mtx);
+        tasks.emplace([task]()->void{
+            *(task)();
+        });
+        lock.unlock();
+        cv.notify_one();
+        return res;
+    }*/
+   /* void executetasks(F f,Args... args){  //this is for multiple type of functions diff func may take diff no of arguments
+    //now we want return type to be the return type of the function trailing return type 
         unique_lock<mutex> lock(mtx);
         tasks.push(func);
         lock.unlock();
         cv.notify_one();
     }
+    */
+   /* void executetasks(function<void()> func){
+        unique_lock<mutex> lock(mtx);
+        tasks.push(func);
+        lock.unlock();
+        cv.notify_one();*/
+    };
 
-};
-void func(){
+//};
+int func(int a){
     this_thread::sleep_for(chrono::seconds(2));
     cout<<"some tasks of user"<<endl;
+    return a*a;
 }
 int main(){
-         ThreadPool pool(8);
-
+            ThreadPool pool(8);
+            future<int> res=pool.executetasks(func,1);
+            cout<<res.get();
     while(1){
-        pool.executetasks(func);
+       // pool.executetasks(func);
+       //cout<<"happening"<<endl;
     }
     return 0;
 }
