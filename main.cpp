@@ -69,7 +69,7 @@ public:
     template<class F, class... Args> //any callable dunction with any number of argument
     auto executetasks(F&& f, Args&&... args) -> future<decltype(f(args...))> {//1 & 2
         using return_type = decltype(f(args...));
-        auto task = make_shared<packaged_task<return_type()>>(bind(forward<F>(f), forward<Args>(args)...));
+        auto task = make_shared<packaged_task<return_type()>>(bind(forward<F>(f), forward<Args>(args)...)); //3
         future<return_type> res = task->get_future();
         {
             unique_lock<mutex> lock(mtx);
@@ -101,8 +101,38 @@ The function's return type is based on decltype(f(args...)). Since F and Args...
 their exact types are unknown at the function declaration time.
 --->not work:template<class F, class... Args>
 std::future<decltype(f(args...))> executetasks(F&& f, Args&&... args); as :This won’t compile because decltype(f(args...)) depends on Args..., but f(args...) hasn’t been parsed yet.
+3:packaged_task:
+what is it and why first of all:------>helps in defeered execution
+Key Idea of std::packaged_task
+It wraps a function so that it does not execute immediately when called.
+Instead, it stores the function inside a callable task that can be executed later.
+If the function returns a value, we can retrieve it later using std::future.
+example:
+#include <iostream>
+#include <future>  // For std::packaged_task and std::future
+using namespace std;
+int add(int a, int b) {
+    return a + b;
+}
+int main() {
+    packaged_task<int(int, int)> task(add); // Wrap the function
+    future<int> result = task.get_future(); // Get future to retrieve result later
 
+    cout << "Function not called yet!" << endl;
 
+    task(5, 3);  // Now we execute it when we want
+
+    cout << "Result: " << result.get() << endl;  // Output: Result: 8
+    return 0;
+}
+Real-World Use Case: Task Execution in a Thread Pool
+In a thread pool, we push tasks into a queue, and worker threads execute them when ready.
+threadPool.enqueue([]{ return add(5, 3); });  // Task added but not executed yet
+// Worker thread picks it up later and executes it.
+Without packaged_task, we would have to execute the function immediately when pushing it to the queue.
+With packaged_task, we store the function, execute it later, and retrieve the result when needed.
+4:forward:concept of perfrct forwarding
+5:bind
 */
 
 // Function that takes time to execute
