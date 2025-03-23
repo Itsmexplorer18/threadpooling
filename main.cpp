@@ -80,6 +80,25 @@ public:
         cv.notify_one();
         return res;
     }
+       //INSTEAD OF BIND ITS BETTER TO USE LAMDA ESPECIALLY N MORDERN C++
+     /*  template<class F, class... Args>
+       auto executetasks(F&& f, Args&&... args) -> future<decltype(f(args...))> {
+           using return_type = decltype(f(args...));
+           auto task = make_shared<packaged_task<return_type()>>(
+               [func = forward<F>(f), tup = make_tuple(forward<Args>(args)...)]() mutable {
+                   return apply(func, tup);
+               });
+       
+           future<return_type> res = task->get_future();
+           {
+               unique_lock<mutex> lock(mtx);
+               tasks.emplace([task]() { (*task)(); });
+           }
+           cv.notify_one();
+           return res;
+       }
+       */
+
 };
 /*
 1:
@@ -131,7 +150,7 @@ threadPool.enqueue([]{ return add(5, 3); });  // Task added but not executed yet
 // Worker thread picks it up later and executes it.
 Without packaged_task, we would have to execute the function immediately when pushing it to the queue.
 With packaged_task, we store the function, execute it later, and retrieve the result when needed.
-4:forward:concept of perfrct forwarding
+4:forward:concept of perfect forwarding
 5:bind
 */
 
