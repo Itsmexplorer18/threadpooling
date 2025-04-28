@@ -7,7 +7,6 @@
 - [Code Walkthrough](#code-walkthrough)  
   - [main()](#main)
   - [func()](#func)
-  - 
   - [ThreadPool Constructor and Destructor](#threadpool-constructor-and-destructor)
     - [Constructor: `ThreadPool(int numThreads)`](#constructor-threadpoolint-numthreads)
     - [Destructor: `~ThreadPool()`](#destructor-threadpool)
