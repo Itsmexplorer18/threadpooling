@@ -1,6 +1,6 @@
 # **Thread Pool**
 
-### **A simple beginnner thread pool implementation in C++**
+### **A simple thread pool implementation in C++**
 
 ## **Table of Contents**
 - [Introduction](#introduction)  
