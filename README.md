@@ -1,5 +1,5 @@
 # **Thread Pool**
-
+new implementation work stealing similar to forkjoinpool of java dynamic load balancing 
 ### **A simple thread pool implementation in C++**
 
 ## **Table of Contents**
