@@ -17,7 +17,7 @@ an extension of this is an implementation work stealing similar to forkjoinpool 
 - [Understanding Thread Pool Performance at Different Time Scales](#understanding-thread-pool-performance-at-different-time-scales)
   - [Why Thread Pool Execution Appears Slower in Microseconds but Faster in Milliseconds](#why-thread-pool-execution-appears-slower-in-microseconds-but-faster-in-milliseconds)
   - [Disclaimer](#disclaimer)
-  - [scope of improvements:more versions](#scope of improvements:more versions)
+- [Scope of Improvements: More Versions](#scope-of-improvementsmore-versions)
 
 ## **Introduction**
 ### **What is a Thread Pool?**
@@ -146,3 +146,6 @@ Measuring execution time at microsecond precision introduces misleading results 
 ## **Disclaimer**
 Performance results may vary based on system architecture, processor capabilities, and background processes. Users should experiment with different workloads and timing scales to determine what works best for their specific use case.
 
+## **scope of improvements:more versions**
+this is a basic represantation of threadpool
+an extension of this is an implementation work stealing similar to forkjoinpool of java with dynamic load balancing  which i also have implemented in another repo you can check that out
