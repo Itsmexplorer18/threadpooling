@@ -1,5 +1,6 @@
 # **Thread Pool**
-new implementation work stealing similar to forkjoinpool of java dynamic load balancing 
+this is a basic represantation of threadpool
+an extension of this is an implementation work stealing similar to forkjoinpool of java with dynamic load balancing  which i also have implemented in another repo you can check that out
 
 ### **A simple thread pool implementation in C++**
 
@@ -16,6 +17,7 @@ new implementation work stealing similar to forkjoinpool of java dynamic load ba
 - [Understanding Thread Pool Performance at Different Time Scales](#understanding-thread-pool-performance-at-different-time-scales)
   - [Why Thread Pool Execution Appears Slower in Microseconds but Faster in Milliseconds](#why-thread-pool-execution-appears-slower-in-microseconds-but-faster-in-milliseconds)
   - [Disclaimer](#disclaimer)
+  - [scope of improvements:more versions](#scope of improvements:more versions)
 
 ## **Introduction**
 ### **What is a Thread Pool?**
